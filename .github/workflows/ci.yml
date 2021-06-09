@@ -1,0 +1,19 @@
+name: continuos integration
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v2
+     - name: Install
+       run : npm install
+     - name: Build
+       run: npm run build
+     - name : Test
+       run : npm test

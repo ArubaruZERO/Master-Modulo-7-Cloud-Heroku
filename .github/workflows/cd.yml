@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        run: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Install heroku and login
         run: |
           curl https://cli-assets.heroku.com/install-ubuntu.sh | sh

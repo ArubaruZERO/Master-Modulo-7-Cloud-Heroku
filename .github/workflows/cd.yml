@@ -1,9 +1,13 @@
-name: continuos deployment workflow
+name: Continuos Deployment workflow
 
 on:
   push:
     branches:
       - master
+env:
+  HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+  IMAGE_NAME: registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
 jobs:
   cd:
     runs-on: ubuntu-latest
@@ -14,12 +18,10 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
           heroku container:login
-      - name : Build docker image
-        run : docker build -t ${{secrets.HEROKU_APP_NAME}}:${{github.run_id}}
+      - name: Build docker image
+        run: docker build -t ${{ env.IMAGE_NAME }} .
       - name: Deploy docker image
-        run: |
-          docker tag ${{secrets.HEROKU_APP_NAME}}:${{github.run_id}}
-          registry.heroku.com/${{secrets.HEROKU_APP_NAME}}/web
-          docker push registry.heroku.com/${{secrets.HEROKU_APP_NAME}}/web
+        run: docker push ${{ env.IMAGE_NAME }}
       - name: Release
-        run: heroku container:release web -a ${{secrets.HEROKU_APP_NAME}}
+        run: heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+
